@@ -70,7 +70,7 @@ which we combine to the usual intratemporal
 and intertemporal FOC
 
 ```math
- \frac{\partial}{\partial c} u(c_t, \ell_t) = \beta \frac{\partial}{\partial c} u(c_t, \ell_t) \bigl( (1-\tau_k) r_{t+1} + 1 - \delta \bigr)
+ \frac{\partial}{\partial c} u(c_t, \ell_t) = \beta \frac{\partial}{\partial c} u(c_{t+1}, \ell_{t+1}) \bigl( (1-\tau_k) r_{t+1} + 1 - \delta \bigr)
 ```
 
 ### Steady state

@@ -1,0 +1,17 @@
+name = "NumericalExample"
+uuid = "b03f2293-9200-4e0b-b522-8e79ced15ac7"
+authors = ["Tamás K. Papp <tkpapp@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
+SpectralKit = "5c252ae7-b5b6-46ab-a016-b0e3d78320b7"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

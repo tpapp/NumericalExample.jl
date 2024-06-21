@@ -9,7 +9,9 @@ makedocs(
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true" #=, mathengine=#),
     authors = "Tamás K. Papp",
     sitename = "NumericalExample.jl",
-    pages = Any["index.md"]
+    pages = Any["introduction.md",
+                "theory.md",
+                "numerical.md",]
     # strict = true,
     # clean = true,
     # checkdocs = :exports,

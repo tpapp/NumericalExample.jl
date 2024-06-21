@@ -1,5 +1,3 @@
-# NumericalExample
-
 ## Theory
 
 The objective of the exercise is solving a simple Ramsey model with taxes in the time domain. The setup and characterization is of course standard, we write it out here in detail to make the presentation self-contained.

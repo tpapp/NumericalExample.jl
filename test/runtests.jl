@@ -48,6 +48,14 @@ end
     end
 end
 
+@testset "solving for random parameters and steady states" begin
+    for _ in 1:50
+        model = random_parameters()
+        sol = solve_model(model, calculate_steady_state(model).k̄ * (rand() + 0.5))
+        @test sol.converged
+    end
+end
+
 ## NOTE add JET to the test environment, then uncomment
 # using JET
 # @testset "static analysis with JET.jl" begin

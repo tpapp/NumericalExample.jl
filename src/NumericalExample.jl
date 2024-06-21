@@ -3,14 +3,20 @@ Placeholder for a short summary about NumericalExample.
 """
 module NumericalExample
 
-export model_parameters, calculate_steady_state, period_budget, euler_residual, labor_FOC_residual,
-    approximation_setup, calculate_initial_guess, approximated_functions, residuals_callable
+export model_parameters, calculate_steady_state, tax_revenue, period_budget, euler_residual,
+    labor_FOC_residual, approximation_setup, calculate_initial_guess, approximated_functions,
+    residuals_callable, solve_model
 
 using ArgCheck: @argcheck
 using LogExpFunctions: logistic
 using InverseFunctions: inverse
 using SpectralKit: Chebyshev, InteriorGrid, SemiInfRational, dimension, grid,
     linear_combination
+using TrustRegionMethods: ForwardDiff_wrapper, trust_region_solver, SolverStoppingCriterion
+
+####
+#### model and solution conditions
+####
 
 Base.@kwdef struct ModelParameters{T}
     "weight on (log) consumption in period utility"
@@ -53,6 +59,12 @@ function rent_and_wage(model::ModelParameters, k, ℓ)
     r, w
 end
 
+function tax_revenue(model::ModelParameters, k, ℓ)
+    (; τ_k, τ_ℓ) = model
+    r, w = rent_and_wage(model, k, ℓ)
+    τ_k * r * k + τ_ℓ * r * ℓ
+end
+
 function period_budget(model::ModelParameters, k, ℓ)
     (; τ_k, τ_ℓ, δ) = model
     r, w = rent_and_wage(model, k, ℓ)
@@ -70,7 +82,7 @@ end
 function labor_FOC_residual(model::ModelParameters; k, ℓ, c)
     (; θ, τ_ℓ) = model
     _, w = rent_and_wage(model, k, ℓ)
-    θ/c*(1 - τ_ℓ)*w - (1-θ)/(1-ℓ)
+    θ / c * (1 - τ_ℓ) * w - (1-θ) / (1-ℓ)
 end
 
 function calculate_steady_state(model::ModelParameters)
@@ -84,6 +96,11 @@ function calculate_steady_state(model::ModelParameters)
     c̄ = c̄_k̄_ratio * k̄
     (; c̄, k̄, ℓ̄)
 end
+
+####
+#### approximate solution calculation
+####
+
 
 struct ApproximationSetup{B,TP,TU}
     basis::B
@@ -163,6 +180,18 @@ function (rc::ResidualsCallable)(θ)
     (; model, approx, steady_state, k0) = rc
     approxf = approximated_functions(approx, θ)
     calculate_residuals(model, approx, steady_state, k0, approxf)
+end
+
+function solve_model(model::ModelParameters, k0;
+                     approx = approximation_setup(),
+                     tol = 1e-2)
+    rc = residuals_callable(model, approx, k0)
+    θ0 = calculate_initial_guess(rc)
+    sol = trust_region_solver(ForwardDiff_wrapper(rc, length(θ0)), θ0;
+                              stopping_criterion = SolverStoppingCriterion(tol))
+    (; converged, x) = sol
+    approxf = approximated_functions(approx, x)
+    (; converged, approxf...)
 end
 
 end # module

@@ -3,7 +3,7 @@ Placeholder for a short summary about NumericalExample.
 """
 module NumericalExample
 
-export model_parameters, steady_state, period_budget, euler_residual
+export model_parameters, steady_state, period_budget, euler_residual, labor_FOC_residual
 
 using ArgCheck: @argcheck
 
@@ -56,12 +56,18 @@ function euler_residual(model::ModelParameters; c, k′, ℓ′, c′)
     rhs / lhs - 1
 end
 
+function labor_FOC_residual(model::ModelParameters; k, ℓ, c)
+    (; θ, τ_ℓ) = model
+    _, w = rent_and_wage(model, k, ℓ)
+    θ/c*(1 - τ_ℓ)*w - (1-θ)/(1-ℓ)
+end
+
 function steady_state(model::ModelParameters)
     (; α, β, θ, δ, τ_k, τ_ℓ) = model
     λ1mα = (1/β - (1 - δ)) / ((1 - τ_k) * α) # λ^{1-α}
     c̄_k̄_ratio = (1 - τ_k) * α * λ1mα + (1 - δ) + (1- τ_ℓ) * (1 - α) * λ1mα - 1
     λ = λ1mα^(1 / (1-α))
-    R = θ / (c̄_k̄_ratio) * (1- τ_ℓ) * (1-α) * λ^α # RHS of steady state intratemporal
+    R = θ / (c̄_k̄_ratio) * (1- τ_ℓ) * (1-α) * λ^(-α) # RHS of steady state intratemporal
     k̄ = 1 / ((1 - θ) / R + λ)
     ℓ̄ = λ * k̄
     c̄ = c̄_k̄_ratio * k̄

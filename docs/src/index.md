@@ -103,7 +103,7 @@ which can easily be solved for ``\lambda``. The budget constraint of the agent c
 
 which yields ``\bar{c}/\bar{k}``. Finally, we can write the intratemporal FOC as
 ```math
-\frac{1-\theta}{1/\bar{k}-\lambda} = \frac{\theta}{\bar{c}/\bar{k}} ( 1-\tau_\ell) \lambda^{-\alpha}
+\frac{1-\theta}{1/\bar{k}-\lambda} = \frac{\theta}{\bar{c}/\bar{k}} ( 1-\tau_\ell) (1-\alpha) \lambda^{-\alpha}
 ```
 
 which we can solve for ``\bar{k}``, and then obtain ``\lambda`` and ``\bar{c}``.

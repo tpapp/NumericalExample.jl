@@ -4,7 +4,7 @@ Placeholder for a short summary about NumericalExample.
 module NumericalExample
 
 export model_parameters, calculate_steady_state, period_budget, euler_residual, labor_FOC_residual,
-    approximation_setup, calculate_initial_guess, approximated_functions
+    approximation_setup, calculate_initial_guess, approximated_functions, residuals_callable
 
 using ArgCheck: @argcheck
 using LogExpFunctions: logistic
@@ -112,15 +112,57 @@ function calculate_initial_guess(approx::ApproximationSetup, steady_state)
     θ
 end
 
-function approximated_functions(setup::ApproximationSetup, θ)
-    (; basis, positive_transformation, unit_transformation) = setup
+function approximated_functions(approx::ApproximationSetup, θ)
+    (; basis, positive_transformation, unit_transformation) = approx
     D = dimension(basis)
     @argcheck length(θ) == D * 3
     θ3 = reshape(θ, D, 3)
-    k = positive_transformation ∘ linear_combination(basis, θ3[:, 1])
-    c = positive_transformation ∘ linear_combination(basis, θ3[:, 2])
-    ℓ = unit_transformation ∘ linear_combination(basis, θ3[:, 3])
-    (; k, c, ℓ)
+    k̃ = positive_transformation ∘ linear_combination(basis, θ3[:, 1])
+    c̃ = positive_transformation ∘ linear_combination(basis, θ3[:, 2])
+    ℓ̃ = unit_transformation ∘ linear_combination(basis, θ3[:, 3])
+    (; k̃, c̃, ℓ̃)
+end
+
+function calculate_residuals(model::ModelParameters, approx::ApproximationSetup,
+                             steady_state, k0, approxf)
+    (; c̃, k̃, ℓ̃) = approxf
+    (; c̄, k̄, ℓ̄) = steady_state
+    residuals = [c̃(Inf) / c̄ - 1, k̃(Inf) / k̄ - 1, ℓ̃(Inf) / ℓ̄ - 1, k̃(0) / k0 - 1]
+    for t in grid(approx.basis)
+        c = c̃(t)
+        k = k̃(t)
+        ℓ = ℓ̃(t)
+        c′ = c̃(t + 1)
+        k′ = k̃(t + 1)
+        ℓ′ = ℓ̃(t + 1)
+        push!(residuals,
+              period_budget(model, k, ℓ) / (c + k′) - 1,
+              euler_residual(model; c, k′, ℓ′, c′),
+              labor_FOC_residual(model; c, ℓ, k))
+    end
+    residuals
+end
+
+Base.@kwdef struct ResidualsCallable{M,A,S,T<:Real}
+    model::M
+    approx::A
+    steady_state::S
+    k0::T
+end
+
+function residuals_callable(model, approx, k0)
+    steady_state = calculate_steady_state(model)
+    ResidualsCallable(; model, approx, steady_state, k0)
+end
+
+function calculate_initial_guess(rc::ResidualsCallable)
+    calculate_initial_guess(rc.approx, rc.steady_state)
+end
+
+function (rc::ResidualsCallable)(θ)
+    (; model, approx, steady_state, k0) = rc
+    approxf = approximated_functions(approx, θ)
+    calculate_residuals(model, approx, steady_state, k0, approxf)
 end
 
 end # module

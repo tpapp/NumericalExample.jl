@@ -15,7 +15,7 @@ end
     for _ in 1:100
         model = random_parameters()
         (; k̄, ℓ̄, c̄) = calculate_steady_state(model)
-        @test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄ atol = 1e-8
+        @test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄ atol = 1e-8 rtol = 1e-8
         @test euler_residual(model; c = c̄, c′ = c̄, k′ = k̄, ℓ′ = ℓ̄) ≈ 0 atol = 1e-8
         @test labor_FOC_residual(model; c = c̄, k = k̄, ℓ = ℓ̄) ≈ 0 atol = 1e-8
     end
@@ -28,14 +28,25 @@ end
         steady_state = calculate_steady_state(model)
         s0 = calculate_initial_guess(approx, steady_state)
         f = approximated_functions(approx, s0)
-        for t in range(0.1, 10.0, 50)
-            @test f.k(t) ≈ steady_state.k̄
-            @test f.c(t) ≈ steady_state.c̄
-            @test f.ℓ(t) ≈ steady_state.ℓ̄
+        for t in vcat(range(0.1, 10.0, 50), [0, Inf])
+            @test f.k̃(t) ≈ steady_state.k̄
+            @test f.c̃(t) ≈ steady_state.c̄
+            @test f.ℓ̃(t) ≈ steady_state.ℓ̄
         end
     end
 end
 
+@testset "residuals callable calculations with steady state" begin
+    approx = approximation_setup()
+    for _ in 1:100
+        model = random_parameters()
+        steady_state = calculate_steady_state(model)
+        rc = residuals_callable(model, approx, steady_state.k̄)
+        θ0 = @inferred calculate_initial_guess(rc)
+        r0 = @inferred rc(θ0)
+        @test sum(abs2, r0) ≤ 1e-8
+    end
+end
 
 ## NOTE add JET to the test environment, then uncomment
 # using JET

@@ -15,9 +15,13 @@ end
     for _ in 1:100
         model = random_parameters()
         (; k̄, ℓ̄, c̄) = steady_state(model)
-        @test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄ atol = 1e-8
+        fail = false
+        fail |= (@test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄ atol = 1e-8) == Test.Fail
         @test euler_residual(model; c = c̄, c′ = c̄, k′ = k̄, ℓ′ = ℓ̄) ≈ 0 atol = 1e-8
         @test labor_FOC_residual(model; c = c̄, k = k̄, ℓ = ℓ̄) ≈ 0 atol = 1e-8
+        if fail
+            @show model
+        end
     end
 end
 

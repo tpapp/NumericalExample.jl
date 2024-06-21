@@ -22,6 +22,12 @@ Base.@kwdef struct ModelParameters{T}
     τ_ℓ::T
 end
 
+function Base.show(io::IO, model::T) where {T<:ModelParameters}
+    print(io, "ModelParameters(; ")
+    join(io, (string(k) * " = " * repr(getfield(model, k)) for k in fieldnames(T)), ", ")
+    print(io, ")")
+end
+
 function model_parameters(; θ = 0.5, β = 0.95, α = 1/3, δ = 0.05, τ_k = 0.2, τ_ℓ = 0.2)
     @argcheck 0 < θ < 1
     @argcheck 0 < β < 1

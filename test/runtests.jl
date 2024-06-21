@@ -15,7 +15,8 @@ end
     for _ in 1:100
         model = random_parameters()
         (; k̄, ℓ̄, c̄) = steady_state(model)
-        @test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄
+        @test period_budget(model, k̄, ℓ̄) ≈ k̄ + c̄ atol = 1e-8
+        @test euler_residual(model; c = c̄, c′ = c̄, k′ = k̄, ℓ′ = ℓ̄) ≈ 0 atol = 1e-8
     end
 end
 

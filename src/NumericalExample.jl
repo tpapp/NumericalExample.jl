@@ -3,7 +3,7 @@ Placeholder for a short summary about NumericalExample.
 """
 module NumericalExample
 
-export model_parameters, steady_state, period_budget
+export model_parameters, steady_state, period_budget, euler_residual
 
 using ArgCheck: @argcheck
 
@@ -46,6 +46,14 @@ function period_budget(model::ModelParameters, k, ℓ)
     (; τ_k, τ_ℓ, δ) = model
     r, w = rent_and_wage(model, k, ℓ)
     ((1 - τ_k) * r + (1 - δ)) * k + (1 - τ_ℓ) * w * ℓ
+end
+
+function euler_residual(model::ModelParameters; c, k′, ℓ′, c′)
+    (; β, θ, τ_k, δ) = model
+    r′, _ = rent_and_wage(model, k′, ℓ′)
+    lhs = θ / c
+    rhs = β * θ / c′ * ((1 - τ_k) * r′ + 1 - δ)
+    rhs / lhs - 1
 end
 
 function steady_state(model::ModelParameters)

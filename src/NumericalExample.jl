@@ -5,11 +5,13 @@ module NumericalExample
 
 export model_parameters, calculate_steady_state, tax_revenue, period_budget, euler_residual,
     labor_FOC_residual, approximation_setup, calculate_initial_guess, approximated_functions,
-    residuals_callable, solve_model
+    residuals_callable, solve_model, default_colorscheme, plot_vs_time
 
 using ArgCheck: @argcheck
+import ColorSchemes
 using LogExpFunctions: logistic
 using InverseFunctions: inverse
+using Miter
 using SpectralKit: Chebyshev, InteriorGrid, SemiInfRational, dimension, grid,
     linear_combination
 using TrustRegionMethods: ForwardDiff_wrapper, trust_region_solver, SolverStoppingCriterion
@@ -193,5 +195,28 @@ function solve_model(model::ModelParameters, k0;
     approxf = approximated_functions(approx, x)
     (; converged, approxf...)
 end
+
+####
+#### plotting code
+####
+
+default_colorscheme() = ColorSchemes.Dark2_8
+
+function plot_vs_time(fs, ts, label = ""; colors = default_colorscheme(),
+                      graph_labels = nothing)
+    values = mapreduce(fs, hcat, ts)
+    function _graph(v, color, i)
+        p = Any[Lines(zip(ts, v); color)]
+        if graph_labels ≠ nothing
+            j = div(length(v), 2)
+            push!(p, Annotation((ts[j], v[j] * 1.02), textcolor(color, graph_labels[i]); bottom = true))
+        end
+        p
+    end
+    graphs = mapreduce(_graph, vcat, eachrow(values), colors, axes(values, 1))
+    Plot(graphs,
+         x_axis = Axis.Linear(; label = "time"), y_axis = Axis.Linear(; label))
+end
+
 
 end # module

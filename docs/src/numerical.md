@@ -1,2 +1,2 @@
-## Numerical approximation
+# Numerical approximation
 

@@ -6,13 +6,14 @@ using Documenter, NumericalExample
 
 makedocs(
     modules = [NumericalExample],
-    format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true" #=, mathengine=#),
+    format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true",
+                             assets = ["assets/custom.css"], #=, mathengine=#),
     authors = "Tamás K. Papp",
     sitename = "NumericalExample.jl",
     pages = Any["index.md",
                 "theory.md",
                 "numerical.md",
-                "application.md"]
+                "application.md"],
     # strict = true,
     # clean = true,
     # checkdocs = :exports,

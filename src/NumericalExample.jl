@@ -184,6 +184,22 @@ function (rc::ResidualsCallable)(θ)
     calculate_residuals(model, approx, steady_state, k0, approxf)
 end
 
+Base.@kwdef struct ModelSolution{TC,TK,TL}
+    converged::Bool
+    c̃::TC
+    k̃::TK
+    ℓ̃::TL
+end
+
+function Base.show(io::IO, solution::ModelSolution)
+    print(io, "model solution ")
+    if solution.converged
+        printstyled(io, "converged"; color = :green)
+    else
+        printstyled(io, "did not converge"; color = :red)
+    end
+end
+
 function solve_model(model::ModelParameters, k0;
                      approx = approximation_setup(),
                      tol = 1e-2)
@@ -193,7 +209,7 @@ function solve_model(model::ModelParameters, k0;
                               stopping_criterion = SolverStoppingCriterion(tol))
     (; converged, x) = sol
     approxf = approximated_functions(approx, x)
-    (; converged, approxf...)
+    ModelSolution(; converged, approxf...)
 end
 
 ####
@@ -203,13 +219,15 @@ end
 default_colorscheme() = ColorSchemes.Dark2_8
 
 function plot_vs_time(fs, ts, label = ""; colors = default_colorscheme(),
-                      graph_labels = nothing)
+                      graph_labels = nothing, label_relative_offset = 0.05)
     values = mapreduce(fs, hcat, ts)
+    label_offset = -(extrema(values)...) * label_relative_offset
     function _graph(v, color, i)
         p = Any[Lines(zip(ts, v); color)]
         if graph_labels ≠ nothing
             j = div(length(v), 2)
-            push!(p, Annotation((ts[j], v[j] * 1.02), textcolor(color, graph_labels[i]); bottom = true))
+            push!(p, Annotation((ts[j], v[j] - label_offset), textcolor(color, graph_labels[i]);
+                                bottom = true))
         end
         p
     end

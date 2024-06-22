@@ -1,6 +1,3 @@
-"""
-Placeholder for a short summary about NumericalExample.
-"""
 module NumericalExample
 
 export model_parameters, calculate_steady_state, tax_revenue, period_budget, euler_residual,

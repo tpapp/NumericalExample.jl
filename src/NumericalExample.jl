@@ -279,6 +279,16 @@ function Base.show(io::IO, solution::ModelSolution)
     end
 end
 
+"""
+$(SIGNATURES)
+
+Solve the `model` using the approximation setup in `approx`, with initial capital `k0`.
+
+`tol` is used for numerical tolerance.
+
+Return an object that has fields `c̃`, `k̃`, `ℓ̃` for the approximated functions on
+``[0,∞)``, and a boolean `converged`, for checking convergence.
+"""
 function solve_model(model::ModelParameters, k0;
                      approx = approximation_setup(),
                      tol = 1e-2)
@@ -295,9 +305,13 @@ end
 #### plotting code
 ####
 
-default_colorscheme() = ColorSchemes.Dark2_8
+"""
+$(SIGNATURES)
 
-function plot_vs_time(fs, ts, label = ""; colors = default_colorscheme(),
+A simple utility function to plot functions `fs` at times `ts`. `graph_labels` labels
+each graph.
+"""
+function plot_vs_time(fs, ts, label = ""; colors = ColorSchemes.Dark2_8,
                       graph_labels = nothing, label_relative_offset = 0.05)
     values = mapreduce(fs, hcat, ts)
     label_offset = -(extrema(values)...) * label_relative_offset

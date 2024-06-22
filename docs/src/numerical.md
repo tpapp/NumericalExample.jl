@@ -50,3 +50,13 @@ Spectral approximations usually work best if we have a reasonably good initial g
 ```@docs
 calculate_initial_guess
 ```
+
+## Solving the model
+
+To solve the model, we define a mapping from the approximation parameters to the residuals, and use a trust region method to solve for the roots, with automatic differentiation.
+
+The solver is encapsulated into the function below.
+
+```@docs
+solve_model
+```

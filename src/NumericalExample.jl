@@ -218,5 +218,4 @@ function plot_vs_time(fs, ts, label = ""; colors = default_colorscheme(),
          x_axis = Axis.Linear(; label = "time"), y_axis = Axis.Linear(; label))
 end
 
-
 end # module

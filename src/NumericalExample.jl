@@ -136,6 +136,11 @@ function labor_FOC_residual(model::ModelParameters; k, ℓ, c)
     θ / c * (1 - τ_ℓ) * w - (1-θ) / (1-ℓ)
 end
 
+"""
+$(SIGNATURES)
+
+Calculate the steady state solution, returning a container with fields `c̄`, `k̄`, `ℓ̄`.
+"""
 function calculate_steady_state(model::ModelParameters)
     (; α, β, θ, δ, τ_k, τ_ℓ) = model
     λ1mα = (1/β - (1 - δ)) / ((1 - τ_k) * α) # λ^{1-α}
@@ -152,13 +157,33 @@ end
 #### approximate solution calculation
 ####
 
+"""
+A container for the approximation setup. Use [`approximaton_setup`](@ref) to create.
 
+$(FIELDS)
+"""
 struct ApproximationSetup{B,TP,TU}
     basis::B
     positive_transformation::TP
     unit_transformation::TU
 end
 
+"""
+$(SIGNATURES)
+
+Return a value that contains all parameters for the approximation.
+
+- `basis0`: the untransformed basis (with a finite domain), defaults to a Chebyshev
+  approximation with 10 elements, nodes on the interior of the domain
+
+- `mid_t`: the time period for more or less the middle node. Approximately, it should be
+  the time horizon we are interested in, but the method is fairly accurate without
+  determining this precisely
+
+- `positive_transformation`, `unit_transformation`: functions that transform ``ℝ`` to
+  ``(0, ∞)`` and ``(0, 1)``. The defaults are `exp` and `logistic`, and you probably do
+  not need to change these.
+"""
 function approximation_setup(;
                              basis0 = Chebyshev(InteriorGrid(), 10),
                              mid_t = 5.0,

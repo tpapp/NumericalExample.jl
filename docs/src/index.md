@@ -1,4 +1,4 @@
-# A worked example of solving a macroeconomic model in Julia
+# Overview
 
 This is a self-contained worked example of solving a *very simple* macroeconomic model in Julia and doing some comparative analysis with the results.
 

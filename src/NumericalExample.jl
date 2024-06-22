@@ -193,6 +193,11 @@ function approximation_setup(;
     ApproximationSetup(basis, positive_transformation, unit_transformation)
 end
 
+"""
+$(SIGNATURES)
+
+Calculate an initial guess for the solution from the steady state.
+"""
 function calculate_initial_guess(approx::ApproximationSetup, steady_state)
     (; c̄, k̄, ℓ̄) = steady_state
     (; basis, positive_transformation, unit_transformation) = approx

@@ -20,6 +20,7 @@ ArgCheck = "2"
 ColorSchemes = "3"
 DocStringExtensions = "0.9"
 InverseFunctions = "0.1"
+LogExpFunctions = "0.3"
 julia = "1.9"
 
 [extras]

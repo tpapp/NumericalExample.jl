@@ -16,6 +16,7 @@ TrustRegionMethods = "14486370-d344-40f0-8ff9-262f8a3330be"
 
 [compat]
 Accessors = "0.1"
+ArgCheck = "2"
 julia = "1.9"
 
 [extras]

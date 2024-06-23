@@ -60,3 +60,10 @@ The solver is encapsulated into the function below.
 ```@docs
 solve_model
 ```
+
+## Utilities
+
+We made a simple function to automate plot colors and labeling.
+```@docs
+plot_vs_time
+```

@@ -17,7 +17,6 @@ makedocs(;
          plugins = [bib],
          clean = true,
          checkdocs = :exports,
-         warnonly = true # Documenter.except(:missing_docs),
          )
 
 # Some setup is needed for documentation deployment, see “Hosting Documentation” and

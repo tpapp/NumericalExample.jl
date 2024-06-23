@@ -31,39 +31,27 @@ graph_labels = ["baseline", math"\mathrm{capital\ tax}\uparrow"]
 Let's plot the evolution of capital first. 
 
 ```@repl application
-plot_vs_time(t -> [sol.k̃(t), sol2.k̃(t)], ts, "capital"; graph_labels);
-Miter.save("capital_vs_time.svg", ans); nothing # hide
+plot_vs_time(t -> [sol.k̃(t), sol2.k̃(t)], ts, "capital"; graph_labels)
 ```
 
 With higher taxes, the steady state is lower, so capital converges to a lower value.
 
-![](capital_vs_time.svg)
-
 If we look at labor instead, it is apparent that labor is subtituted for capital in production.
 
 ```@repl application
-plot_vs_time(t -> [sol.ℓ̃(t), sol2.ℓ̃(t)], ts, "labor"; graph_labels);
-Miter.save("labor_vs_time.svg", ans); nothing # hide
+plot_vs_time(t -> [sol.ℓ̃(t), sol2.ℓ̃(t)], ts, "labor"; graph_labels)
 ```
-
-![](labor_vs_time.svg)
 
 However, consumption is lower when capital taxes are higher, since the economy produces less.
 
-```@repl application
-plot_vs_time(t -> [sol.c̃(t), sol2.c̃(t)], ts, "consumption"; graph_labels);
-Miter.save("consumption_vs_time.svg", ans); nothing # hide
+```@example application
+plot_vs_time(t -> [sol.c̃(t), sol2.c̃(t)], ts, "consumption"; graph_labels)
 ```
-
-![](consumption_vs_time.svg)
 
 However, as expected, tax revenue increases. Since we did not define the utility for the government expenditure, we do not compare welfare.
 
-```@repl application
+```@example application
 plot_vs_time(t -> [tax_revenue(model, sol.k̃(t), sol.ℓ̃(t)),
                    tax_revenue(model2, sol2.k̃(t), sol2.ℓ̃(t))],
-             ts, "tax revenue"; graph_labels);
-Miter.save("tax_revenue_vs_time.svg", ans); nothing # hide
+             ts, "tax revenue"; graph_labels)
 ```
-
-![](tax_revenue_vs_time.svg)

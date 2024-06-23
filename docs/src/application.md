@@ -30,7 +30,7 @@ graph_labels = ["baseline", math"\mathrm{capital\ tax}\uparrow"]
 
 Let's plot the evolution of capital first. 
 
-```@repl application
+```@example application
 plot_vs_time(t -> [sol.k̃(t), sol2.k̃(t)], ts, "capital"; graph_labels)
 ```
 
@@ -38,7 +38,7 @@ With higher taxes, the steady state is lower, so capital converges to a lower va
 
 If we look at labor instead, it is apparent that labor is subtituted for capital in production.
 
-```@repl application
+```@example application
 plot_vs_time(t -> [sol.ℓ̃(t), sol2.ℓ̃(t)], ts, "labor"; graph_labels)
 ```
 

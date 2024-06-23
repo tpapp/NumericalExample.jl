@@ -13,7 +13,7 @@ The emphasis is on showcasing good practices for
 
 1. software documentation, including docstrings in the [source code](./src/NumericalExample.jl) and the [generated documentation](https://tpapp.github.io/NumericalExample.jl/dev)
 2. unit [tests](./test/runtest.jl) that ensure the code is always in a correct state,
-3. some interactive analysis and plotting,
+3. some interactive [analysis and plotting](https://www.tamaspapp.eu/NumericalExample.jl/dev/application/),
 4. scientific software development.
 
 Because of the focus on the above, the model is kept trivially simple. An actual economic model would be more complex and be calibrated/estimated using data (which here is omitted for simplicity), but code would be organized along the same principles.
@@ -26,4 +26,4 @@ This is not registered package. Install in an interactive environment with
 julia> ]add https://github.com/tpapp/NumericalExample.jl
 ```
 
-Julia's package delivery mechanism ensures that all required packages are installed. The [manifest](./Manifest.toml) is commiteed to the repository so you get the exact same versions --- this is important for scientific code.
+Julia's package delivery mechanism ensures that all required packages are installed. The [manifest](./Manifest.toml) is commiteed to the repository so you get the exact same versions — this is important for scientific code.

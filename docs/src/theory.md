@@ -2,6 +2,10 @@
 
 The objective of the exercise is solving a simple Ramsey model with taxes in the time domain. The setup and characterization is of course standard, we write it out here in detail to make the presentation self-contained.
 
+While this model is kept simple, models of this class are useful for policy analysis as they can incorporate a rich sectoral structure, various adjustment frictios for labor and capital, and of course more more detailed consumers. A richer model would allow, for example, realistic experiments with tax policies or evaluation of industry policies.
+
+The analysis and solution will be in the time domain instead of a recursive formulation. Recursive formulations are better for setups with an aggregate stochastic component (which this model does not have), while time domain methods allow the incorporation of time-dependent policies (which we do not pursue here at this stage).
+
 ### Model setup
 
 The representative agent maximizes lifetime utility
